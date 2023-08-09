@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { scheduleList } from '@/api/home/scheduleList';
-import { Switch, Button, Space, Typography, Tooltip, theme } from 'antd';
+import { Switch, Button, Space, Typography, Tooltip } from 'antd';
 import { getMyAccount } from '@/api/myAccount/getMyAccount';
 import { getAccessTokenFromCookie } from '@/utils/cookies';
 import { DUTY_ANNUAL } from '@/data/constants';

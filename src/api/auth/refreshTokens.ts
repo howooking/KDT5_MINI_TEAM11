@@ -5,19 +5,17 @@ import {
 } from '@/utils/cookies';
 import axios from 'axios';
 
-export default async function refreshAccessToken(refreshToken: string) {
+export default async function refreshAccessToken() {
   try {
-    const response = await axios.post(`${BASE_API_URL}/v2/auth/refresh-token`, {
-      refreshToken,
+    const response = await axios(`${BASE_API_URL}/v1/auth/refresh-token`, {
+      withCredentials: true,
     });
     if (response.status === 200) {
-      localStorage.setItem('refreshToken', response.data.response.refreshToken);
       setAccessTokenToCookie(response.data.response.accessToken);
       return response.data.response.accessToken;
     }
   } catch (error) {
     deleteAccessTokenFromCookie();
-    localStorage.removeItem('refreshToken');
     throw error;
   }
 }

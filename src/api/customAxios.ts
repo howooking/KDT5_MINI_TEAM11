@@ -19,6 +19,7 @@ customAxios.interceptors.request.use(
 
     // 로그인 요청, 회원가입 등... 을 제외한 모든 요청은 accessToken을 필요로함
     req.headers.Authorization = `Bearer ${accessToken}`;
+    req.withCredentials = true;
 
     // 요청단계에서 accessToken의 만료시간을 확인해서 5분 이하로 남았을 경우 요청을 보내기 전에 accessToken을 재발급 받는 로직
 
@@ -75,7 +76,7 @@ customAxios.interceptors.response.use(
         return Promise.reject(error);
       }
       try {
-        const newAccessToken = await refreshAccessToken(refreshToken);
+        const newAccessToken = await refreshAccessToken();
 
         // 기존의 요청들
         const config = error.config;
