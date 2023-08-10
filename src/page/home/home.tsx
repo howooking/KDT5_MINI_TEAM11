@@ -16,12 +16,13 @@ import dayjs from 'dayjs';
 import Calendar from './calendar';
 import Signin from '@/page/home/signin';
 import { DatePickerProps, RangePickerProps } from 'antd/es/date-picker';
+import { addScheduleRequest } from '@/api/mySchedule';
 import MySchedule from '@/page/home/mySchedule';
 import { DUTY_ANNUAL } from '@/data/constants';
 import { ReRenderStateAtom } from '@/recoil/ReRenderStateAtom';
 import { scheduleList } from '@/api/home/scheduleList';
 import { UserEmailAtom } from '@/recoil/UserEmailAtom';
-import { addScheduleRequest } from '@/api/myAccount/mySchedule';
+import { pendingList } from '@/api/home/pendingList';
 
 const { RangePicker } = DatePicker;
 
@@ -43,9 +44,6 @@ export default function Home() {
 
   const [messageApi, contextHolder] = message.useMessage();
 
-  const [toggleRequest, setToggleRequest] = useState(false);
-  console.log(toggleRequest);
-
   const [year, setYear] = useState(new Date().getFullYear());
   // const {
   //   token: { colorTextLabel },
@@ -55,6 +53,7 @@ export default function Home() {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(!accessToken);
   const setReRender = useSetRecoilState(ReRenderStateAtom);
+  const reRender = useRecoilValue(ReRenderStateAtom);
   // 로그아웃을 하면 isModalOpen이 !accessToken의 상태를 바로 반영하지 않음
   // 따라서 useEffect로 반영이 되도록함
   useEffect(() => {
@@ -86,9 +85,21 @@ export default function Home() {
     }[]
   >([]);
 
+  const [myPendingScheduleList, setMyPendingScheduleList] = useState<
+    {
+      id: number;
+      key: number;
+      scheduleType: 'ANNUAL' | 'DUTY';
+      startDate: string;
+      endDate: string;
+      state: 'PENDING';
+    }[]
+  >([]);
+
   const [userYearlySchedulesLoading, setUserYearlySchedulesLoading] =
     useState(false);
 
+  const [pendingLoading, setPendingLoading] = useState(false);
   useEffect(() => {
     const getUsersYearlySchedules = async () => {
       if (!accessToken) {
@@ -135,6 +146,36 @@ export default function Home() {
     getUsersYearlySchedules();
   }, [year, accessToken, userEmail]);
 
+  useEffect(() => {
+    const myPendingSchedule = async () => {
+      if (!accessToken) {
+        return;
+      }
+      try {
+        setPendingLoading(true);
+        const response = await pendingList(year);
+        const responseData = response.data.response;
+
+        const myPendingScheduleData = responseData.map((item: mySchedule) => {
+          return {
+            id: item.id,
+            key: item.id,
+            scheduleType: item.scheduleType,
+            startDate: item.startDate,
+            endDate: item.endDate,
+            state: item.state,
+          };
+        });
+        setMyPendingScheduleList(myPendingScheduleData);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setPendingLoading(false);
+      }
+    };
+    myPendingSchedule();
+  }, [year, reRender, accessToken]);
+
   const handleSelect = (value: string) => {
     setScheduleInput({
       startDate: '',
@@ -180,7 +221,6 @@ export default function Home() {
             ]?.label
           } 신청 완료`,
         });
-        setToggleRequest((prev) => !prev);
         setReRender((prev) => !prev);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -199,8 +239,8 @@ export default function Home() {
   const pastDates = (current: dayjs.Dayjs) => {
     return current < dayjs().startOf('day');
   };
-  const mySchedule = events.filter((event) => event.userEmail === userEmail);
 
+  const mySchedule = events.filter((event) => event.userEmail === userEmail);
   return (
     <>
       {contextHolder}
@@ -243,17 +283,17 @@ export default function Home() {
             }}
           >
             <div style={{ width: '100%' }}>
-              {/* <MySchedule
+              <MySchedule
+                setMyPendingScheduleList={setMyPendingScheduleList}
                 isPending
-                setToggleRequest={setToggleRequest}
-                schedule={myPendingSchedule}
-                loading={isMyScheduleLoading}
+                schedule={myPendingScheduleList}
+                loading={pendingLoading}
                 caption="요청대기"
-              /> */}
+              />
             </div>
             <div style={{ width: '100%' }}>
               <MySchedule
-                setToggleRequest={setToggleRequest}
+                setMyPendingScheduleList={setMyPendingScheduleList}
                 schedule={sideMySchedule}
                 loading={userYearlySchedulesLoading}
                 caption="요청결과"

@@ -9,7 +9,7 @@ import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
 export const customAxios = axios.create({
   baseURL: BASE_API_URL,
-  timeout: 7000, // 5초간 아무 응답이 없으면 취소
+  timeout: 7000, // 7초간 아무 응답이 없으면 취소
 });
 
 customAxios.interceptors.request.use(
@@ -56,7 +56,7 @@ customAxios.interceptors.response.use(
     if (status === 401) {
       if (!isRefreshing) {
         isRefreshing = true;
-        console.log('일로 들어옴');
+
         try {
           const response = await axios(
             `${BASE_API_URL}/v1/auth/refresh-token`,
@@ -64,6 +64,7 @@ customAxios.interceptors.response.use(
               withCredentials: true,
             },
           );
+
           if (response.status === 200) {
             setAccessTokenToCookie(response.data.response.accessToken);
 

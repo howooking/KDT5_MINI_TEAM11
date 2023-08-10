@@ -109,10 +109,10 @@ export default function MyHeader() {
       {contextHolder}
       <Header
         style={{
-          padding: '0 20px',
           backgroundColor: colorPrimaryBg,
           height: 60,
           borderBottom: '1px solid #eee',
+          padding: '0 20px',
         }}
       >
         <div

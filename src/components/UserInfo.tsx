@@ -22,7 +22,7 @@ export default function UserInfo({
         gap: 10,
       }}
     >
-      <Avatar src={userHeaderInfo.profileThumbNail} className="booh" />
+      <Avatar src={userHeaderInfo.profileThumbNail} />
       <Link to="/myaccount">{userHeaderInfo.userName}</Link>
       <Badge
         className="booh"
