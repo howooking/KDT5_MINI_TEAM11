@@ -4,10 +4,10 @@ import { Button, Table, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Typography } from 'antd';
 import { DUTY_ANNUAL } from '@/data/constants';
-import { cancelScheduleRequest } from '@/api/myAccount/mySchedule';
 import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { ReRenderStateAtom } from '@/recoil/ReRenderStateAtom';
+import { cancelScheduleRequest } from '@/api/myAccount/mySchedule';
 
 const { Text } = Typography;
 

@@ -22,14 +22,15 @@ export default function UserInfo({
         gap: 10,
       }}
     >
-      <Avatar src={userHeaderInfo.profileThumbNail} />
+      <Avatar src={userHeaderInfo.profileThumbNail} className="booh" />
       <Link to="/myaccount">{userHeaderInfo.userName}</Link>
       <Badge
+        className="booh"
         count={userHeaderInfo.position}
         // antd에서 지정된 색들이 있음 몇개 가져와서 constants 직책별로 넣어둠
         color={POSITIONS[userHeaderInfo?.position]?.color}
       />
-      <Text>
+      <Text className="booh">
         남은연차{' '}
         {POSITIONS[userHeaderInfo?.position]?.total_vacation -
           Number(userHeaderInfo.usedVacation)}

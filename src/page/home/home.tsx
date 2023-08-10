@@ -16,12 +16,12 @@ import dayjs from 'dayjs';
 import Calendar from './calendar';
 import Signin from '@/page/home/signin';
 import { DatePickerProps, RangePickerProps } from 'antd/es/date-picker';
-import { addScheduleRequest } from '@/api/myAccount/mySchedule';
 import MySchedule from '@/page/home/mySchedule';
 import { DUTY_ANNUAL } from '@/data/constants';
 import { ReRenderStateAtom } from '@/recoil/ReRenderStateAtom';
 import { scheduleList } from '@/api/home/scheduleList';
 import { UserEmailAtom } from '@/recoil/UserEmailAtom';
+import { addScheduleRequest } from '@/api/myAccount/mySchedule';
 
 const { RangePicker } = DatePicker;
 
@@ -232,7 +232,7 @@ export default function Home() {
             background: 'white',
             paddingTop: 20,
           }}
-          className="sider"
+          className="booh"
         >
           <div
             style={{

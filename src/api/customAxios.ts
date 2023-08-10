@@ -23,7 +23,6 @@ customAxios.interceptors.request.use(
     // 로그인 요청, 회원가입 등... 을 제외한 모든 요청은 accessToken을 필요로함
     req.headers.Authorization = `Bearer ${accessToken}`;
     req.withCredentials = true;
-
     // // 만료시간 표시
     // access토큰의 만료시간을 초로 나타낸 시간
     const expirationTime = getPayloadFromJWT(accessToken).exp as number;
