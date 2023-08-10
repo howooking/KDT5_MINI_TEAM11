@@ -3,12 +3,31 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { IsManagerAtom } from '@/recoil/IsManagerAtom';
-
 const { Content, Sider } = Layout;
 
 export default function MyAccountLayout() {
   const { pathname } = useLocation();
-  const [selectedMenuKey, setSelectedMenuKey] = useState(() => pathname);
+
+  const MY_ACCOUNT_MENU: {
+    [key: string]: { key: string };
+  } = {
+    '/myaccount': {
+      key: '1',
+    },
+    '/myaccount/vacation': {
+      key: '2',
+    },
+    '/myaccount/approve': {
+      key: '3',
+    },
+    '/myaccount/promote': {
+      key: '3',
+    },
+  };
+
+  const [selectedMenuKey, setSelectedMenuKey] = useState(
+    MY_ACCOUNT_MENU[pathname].key,
+  );
 
   const navigate = useNavigate();
 
@@ -17,27 +36,27 @@ export default function MyAccountLayout() {
 
   const items: MenuProps['items'] = [
     {
-      key: 1,
+      key: '1',
       label: '내 정보',
       onClick: () => {
         navigate('/myaccount');
-        setSelectedMenuKey('/myaccount');
+        setSelectedMenuKey('1');
       },
     },
     {
-      key: 2,
+      key: '2',
       label: '내 연차/당직',
       onClick: () => {
         navigate('/myaccount/vacation');
-        setSelectedMenuKey('/myaccount/vacation');
+        setSelectedMenuKey('2');
       },
     },
     {
-      key: 3,
+      key: '3',
       label: '관리자',
       onClick: () => {
         navigate('/myaccount/approve');
-        setSelectedMenuKey('/myaccount/admin');
+        setSelectedMenuKey('3');
       },
     },
   ];
@@ -45,17 +64,26 @@ export default function MyAccountLayout() {
   return (
     <Layout>
       <Sider
-        width={200}
+        width={300}
         style={{ minHeight: 'calc(100vh - 60px) ', background: 'white' }}
       >
         <Menu
           mode="inline"
-          style={{ height: '100%', borderRight: 0 }}
+          style={{
+            height: '100%',
+            borderRight: 0,
+            textAlign: 'center',
+            padding: 20,
+          }}
           items={isManager ? items : items.splice(0, 2)}
-          selectedKeys={[pathname === selectedMenuKey ? selectedMenuKey : '']}
+          selectedKeys={[
+            MY_ACCOUNT_MENU[pathname].key === selectedMenuKey
+              ? selectedMenuKey
+              : '',
+          ]}
         />
       </Sider>
-      <Layout style={{ padding: 20 }}>
+      <Layout style={{ paddingLeft: 10 }}>
         <Content
           style={{
             background: 'white',

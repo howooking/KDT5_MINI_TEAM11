@@ -4,7 +4,7 @@
 
 .icons {
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease-in-out;
 }
 
 .icons:hover {
@@ -13,11 +13,11 @@
 
 /* 달력 평일, 토요일, 일요일 색상 변경 */
 .fc-day-sun a {
-  color: red;
+  color: #ff4d4f;
 }
 
 .fc-day-sat a {
-  color: blue;
+  color: #69b1ff;
 }
 
 .fc-day-mon a,
@@ -25,7 +25,7 @@
 .fc-day-wed a,
 .fc-day-thu a,
 .fc-day-fri a {
-  color: black;
+  color: #595959;
 }
 
 .fc-day {
@@ -38,4 +38,13 @@
 
 .ant-table-wrapper .ant-table-thead > tr > th {
   text-align: center;
+}
+
+.sider {
+  display: none;
+}
+@media screen and (min-width: 1000px) {
+  .sider {
+    display: block;
+  }
 }

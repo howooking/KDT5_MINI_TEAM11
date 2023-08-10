@@ -118,6 +118,7 @@ export default function Promote() {
         columns={columns}
         dataSource={workers}
         loading={isWorkerListLoading}
+        pagination={{ style: { marginRight: 20 }, defaultPageSize: 15 }}
       />
       <PromotionModal
         isModalOpen={isModalOpen}

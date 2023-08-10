@@ -1,7 +1,7 @@
-import { getMySchedule } from '@/api/mySchedule';
+import { getMySchedule } from '@/api/myAccount/mySchedule';
 import RequesTag from '@/components/RequesTag';
 import { DUTY_ANNUAL } from '@/data/constants';
-import { cancelScheduleRequest } from '@/api/mySchedule';
+import { cancelScheduleRequest } from '@/api/myAccount/mySchedule';
 import { AccessTokenAtom } from '@/recoil/AccessTokkenAtom';
 import { Select, Button, Table, message, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -173,18 +173,20 @@ export default function Vaction() {
       title: 'Action',
       key: 'action',
       align: 'center',
-      render: (_, { id, endDate }) => (
+      render: (_, { id, endDate, state }) => (
         <Popconfirm
           title="목록 삭제"
           description="삭제하시겠습니까?"
           onConfirm={() => handleCancelSchedule(id)}
           okText="Yes"
           cancelText="No"
-          disabled={pastDates(dayjs(endDate))}
+          disabled={pastDates(dayjs(endDate)) || state === 'REJECT'}
         >
           <Button
             size="small"
-            disabled={isLoading || pastDates(dayjs(endDate))}
+            disabled={
+              isLoading || pastDates(dayjs(endDate)) || state === 'REJECT'
+            }
             danger
           >
             삭제
@@ -220,6 +222,7 @@ export default function Vaction() {
         columns={columns}
         dataSource={checkedVacationRequests}
         loading={isvacationRequestsLoading}
+        pagination={{ style: { marginRight: 20 }, defaultPageSize: 15 }}
       />
     </>
   );

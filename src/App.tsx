@@ -24,9 +24,9 @@ export default function App() {
   return (
     <ConfigProvider theme={theme} locale={koKR}>
       <Routes>
+        <Route path="/signup" element={<Signup />} />
         <Route element={<MyLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<Signup />} />
           <Route element={<ProtectedRoute />}>
             <Route element={<MyAccountLayout />}>
               <Route path="/myaccount" element={<MyAccount />} />

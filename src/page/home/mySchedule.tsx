@@ -4,7 +4,7 @@ import { Button, Table, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Typography } from 'antd';
 import { DUTY_ANNUAL } from '@/data/constants';
-import { cancelScheduleRequest } from '@/api/mySchedule';
+import { cancelScheduleRequest } from '@/api/myAccount/mySchedule';
 import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { ReRenderStateAtom } from '@/recoil/ReRenderStateAtom';
@@ -107,7 +107,6 @@ export default function MySchedule({
       render: (_, { state, key }) => {
         return isPending ? (
           <Button
-            loading={isDeletingRequest}
             disabled={isDeletingRequest}
             size="small"
             style={{ fontSize: 9 }}
@@ -134,7 +133,7 @@ export default function MySchedule({
       <Table
         caption={caption}
         rowClassName="myScheduleRow"
-        pagination={{ defaultPageSize: 5 }}
+        pagination={{ defaultPageSize: 5, style: { paddingRight: 10 } }}
         columns={columns}
         dataSource={sortedData}
         size="small"

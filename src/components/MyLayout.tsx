@@ -5,21 +5,9 @@ import MyHeader from '@/components/MyHeader';
 
 export default function MyLayout() {
   return (
-    <Layout
-      style={{
-        display: 'flex',
-        minHeight: '100vh',
-      }}
-    >
+    <Layout>
       <MyHeader />
-      <Content
-        style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      <Content>
         <Outlet />
       </Content>
     </Layout>

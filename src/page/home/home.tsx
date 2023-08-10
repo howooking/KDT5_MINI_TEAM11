@@ -11,24 +11,40 @@ import {
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import Calendar from './calendar';
 import Signin from '@/page/home/signin';
 import { DatePickerProps, RangePickerProps } from 'antd/es/date-picker';
-import { addScheduleRequest, getMySchedule } from '@/api/mySchedule';
+import { addScheduleRequest } from '@/api/myAccount/mySchedule';
 import MySchedule from '@/page/home/mySchedule';
-import { IMySchedule } from '@/types/IMySchdule';
 import { DUTY_ANNUAL } from '@/data/constants';
 import { ReRenderStateAtom } from '@/recoil/ReRenderStateAtom';
+import { scheduleList } from '@/api/home/scheduleList';
+import { UserEmailAtom } from '@/recoil/UserEmailAtom';
 
 const { RangePicker } = DatePicker;
 
+export interface ScheduleItem {
+  userEmail: string;
+  userName: string;
+  scheduleType: string;
+  startDate: string;
+  endDate: string;
+  state: string;
+}
+
+interface mySchedule extends ScheduleItem {
+  id: number;
+}
+
 export default function Home() {
   // antd message(화면 상단에 뜨는 메세지)기능
+
   const [messageApi, contextHolder] = message.useMessage();
 
   const [toggleRequest, setToggleRequest] = useState(false);
+  console.log(toggleRequest);
 
   const [year, setYear] = useState(new Date().getFullYear());
   // const {
@@ -36,6 +52,7 @@ export default function Home() {
   // } = theme.useToken();
 
   const accessToken = useRecoilValue(AccessTokenAtom);
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(!accessToken);
   const setReRender = useSetRecoilState(ReRenderStateAtom);
   // 로그아웃을 하면 isModalOpen이 !accessToken의 상태를 바로 반영하지 않음
@@ -54,48 +71,69 @@ export default function Home() {
     endDate: '',
   });
 
-  const [mySchedule, setMyschedule] = useState<IMySchedule[]>([]);
-  // console.log(mySchedule);
-  const [isMyScheduleLoading, setIsMyScheduleLoading] = useState(false);
+  const userEmail = useRecoilValue(UserEmailAtom);
+
+  const [events, setEvents] = useState<ScheduleItem[]>([]);
+
+  const [sideMySchedule, setSideMyschedule] = useState<
+    {
+      id: number;
+      key: number;
+      scheduleType: 'ANNUAL' | 'DUTY';
+      startDate: string;
+      endDate: string;
+      state: 'REJECT' | 'APPROVE' | 'PENDING';
+    }[]
+  >([]);
+
+  const [userYearlySchedulesLoading, setUserYearlySchedulesLoading] =
+    useState(false);
 
   useEffect(() => {
-    const getData = async () => {
+    const getUsersYearlySchedules = async () => {
       if (!accessToken) {
         return;
       }
       try {
-        setIsMyScheduleLoading(true);
-        const response = await getMySchedule(year);
-        if (response.status === 200) {
-          const myScheduleData = response.data.response as IMySchedule[];
+        setUserYearlySchedulesLoading(true);
+        const listResponse = await scheduleList(year);
+        const listResponseData = listResponse.data.response;
 
-          // 성공했을때
-          setMyschedule(
-            myScheduleData.map((schedule) => ({
-              ...schedule,
-              key: schedule.id,
-            })),
-          );
-          return;
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        console.log('내 스케쥴 정보 로딩 중 에러발생 : ', error);
+        const sideMyScheduleData = listResponseData
+          .filter((item: mySchedule) => item.userEmail === userEmail)
+          .map((item: mySchedule) => {
+            return {
+              id: item.id,
+              key: item.id,
+              scheduleType: item.scheduleType,
+              startDate: item.startDate,
+              endDate: item.endDate,
+              state: item.state,
+            };
+          });
+        setSideMyschedule(sideMyScheduleData);
+
+        const events = listResponseData.map((item: ScheduleItem) => {
+          const adjustEndDate = dayjs(item.endDate)
+            .add(1, 'day')
+            .format('YYYY-MM-DD');
+          return {
+            userEmail: item.userEmail,
+            title: item.userName,
+            start: item.startDate,
+            end: adjustEndDate,
+            color: DUTY_ANNUAL[item.scheduleType].color,
+          };
+        });
+        setEvents(events);
+      } catch (error) {
+        console.log(error);
       } finally {
-        setIsMyScheduleLoading(false);
+        setUserYearlySchedulesLoading(false);
       }
     };
-    getData();
-  }, [accessToken, toggleRequest, year]);
-
-  const myPendingSchedule = useMemo(
-    () => mySchedule?.filter((schedule) => schedule.state === 'PENDING'),
-    [mySchedule],
-  );
-  const approvedRejectdSchedule = useMemo(
-    () => mySchedule?.filter((schedule) => schedule.state !== 'PENDING'),
-    [mySchedule],
-  );
+    getUsersYearlySchedules();
+  }, [year, accessToken, userEmail]);
 
   const handleSelect = (value: string) => {
     setScheduleInput({
@@ -162,9 +200,13 @@ export default function Home() {
     return current < dayjs().startOf('day');
   };
 
+  const mySchedule = events.filter((event) => event.userEmail === userEmail);
+  console.log(events);
   return (
     <>
       {contextHolder}
+
+      {/* 로그인 창 */}
       <Modal
         title="로그인"
         centered
@@ -174,6 +216,7 @@ export default function Home() {
       >
         <Signin setIsModalOpen={setIsModalOpen} />
       </Modal>
+
       <Layout
         style={{
           filter: accessToken ? '' : 'blur(5px)',
@@ -187,7 +230,9 @@ export default function Home() {
           width={300}
           style={{
             background: 'white',
+            paddingTop: 20,
           }}
+          className="sider"
         >
           <div
             style={{
@@ -199,19 +244,19 @@ export default function Home() {
             }}
           >
             <div style={{ width: '100%' }}>
-              <MySchedule
+              {/* <MySchedule
                 isPending
                 setToggleRequest={setToggleRequest}
                 schedule={myPendingSchedule}
                 loading={isMyScheduleLoading}
                 caption="요청대기"
-              />
+              /> */}
             </div>
             <div style={{ width: '100%' }}>
               <MySchedule
                 setToggleRequest={setToggleRequest}
-                schedule={approvedRejectdSchedule}
-                loading={isMyScheduleLoading}
+                schedule={sideMySchedule}
+                loading={userYearlySchedulesLoading}
                 caption="요청결과"
               />
             </div>
@@ -272,9 +317,11 @@ export default function Home() {
           >
             {/* 로그인 상태를 확인하기 위해서 accessToken을 boolean 데이터 형식으로 변환해서 Calendar컴포넌트에 props로 전달 */}
             <Calendar
-              isSignedin={!!accessToken}
+              mySchedule={mySchedule}
+              events={events}
               year={year}
               setYear={setYear}
+              userYearlySchedulesLoading={userYearlySchedulesLoading}
             />
           </Content>
         </Layout>

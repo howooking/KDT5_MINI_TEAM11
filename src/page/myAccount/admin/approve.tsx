@@ -156,7 +156,7 @@ export default function Approve() {
         },
         {
           text: '승인',
-          value: 'RESOLVE',
+          value: 'APPROVE',
         },
         {
           text: '거절',
@@ -215,6 +215,7 @@ export default function Approve() {
         columns={columns}
         dataSource={vacationRequests}
         loading={isvacationRequestsLoading}
+        pagination={{ style: { marginRight: 20 }, defaultPageSize: 15 }}
       />
     </>
   );
