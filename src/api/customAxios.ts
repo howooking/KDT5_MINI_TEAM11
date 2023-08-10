@@ -65,6 +65,7 @@ customAxios.interceptors.response.use(
 
             const config = error.config;
             config.headers.Authorization = `Bearer ${response.data.response.accessToken}`;
+            config.withCredentials = true;
 
             const retryOriginalRequest = new Promise((resolve) => {
               resolve(axios(config));
