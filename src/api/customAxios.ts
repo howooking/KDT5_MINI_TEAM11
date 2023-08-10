@@ -56,10 +56,14 @@ customAxios.interceptors.response.use(
     if (status === 401) {
       if (!isRefreshing) {
         isRefreshing = true;
-
+        console.log('일로 들어옴');
         try {
-          const response = await axios(`${BASE_API_URL}/v1/auth/refresh-token`);
-
+          const response = await axios(
+            `${BASE_API_URL}/v1/auth/refresh-token`,
+            {
+              withCredentials: true,
+            },
+          );
           if (response.status === 200) {
             setAccessTokenToCookie(response.data.response.accessToken);
 

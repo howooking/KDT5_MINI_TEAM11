@@ -199,9 +199,8 @@ export default function Home() {
   const pastDates = (current: dayjs.Dayjs) => {
     return current < dayjs().startOf('day');
   };
-
   const mySchedule = events.filter((event) => event.userEmail === userEmail);
-  console.log(events);
+
   return (
     <>
       {contextHolder}
