@@ -22,7 +22,6 @@ interface CheckedVacationRequestType {
 }
 
 export default function Vaction() {
-  // antd message(화면 상단에 뜨는 메세지)기능
   const [messageApi, contextHolder] = message.useMessage();
 
   const [checkedVacationRequests, setCheckedVacationRequests] = useState<
