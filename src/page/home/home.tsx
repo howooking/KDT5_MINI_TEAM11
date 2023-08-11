@@ -99,7 +99,6 @@ export default function Home() {
   const [userYearlySchedulesLoading, setUserYearlySchedulesLoading] =
     useState(false);
 
-  const [pendingLoading, setPendingLoading] = useState(false);
   useEffect(() => {
     const getUsersYearlySchedules = async () => {
       if (!accessToken) {
@@ -112,6 +111,7 @@ export default function Home() {
 
         const sideMyScheduleData = listResponseData
           .filter((item: mySchedule) => item.userEmail === userEmail)
+          .filter((item: mySchedule) => item.state === 'APPROVE')
           .map((item: mySchedule) => {
             return {
               id: item.id,
@@ -124,18 +124,20 @@ export default function Home() {
           });
         setSideMyschedule(sideMyScheduleData);
 
-        const events = listResponseData.map((item: ScheduleItem) => {
-          const adjustEndDate = dayjs(item.endDate)
-            .add(1, 'day')
-            .format('YYYY-MM-DD');
-          return {
-            userEmail: item.userEmail,
-            title: item.userName,
-            start: item.startDate,
-            end: adjustEndDate,
-            color: DUTY_ANNUAL[item.scheduleType].color,
-          };
-        });
+        const events = listResponseData
+          .filter((item: mySchedule) => item.state === 'APPROVE')
+          .map((item: ScheduleItem) => {
+            const adjustEndDate = dayjs(item.endDate)
+              .add(1, 'day')
+              .format('YYYY-MM-DD');
+            return {
+              userEmail: item.userEmail,
+              title: item.userName,
+              start: item.startDate,
+              end: adjustEndDate,
+              color: DUTY_ANNUAL[item.scheduleType].color,
+            };
+          });
         setEvents(events);
       } catch (error) {
         console.log(error);
@@ -145,6 +147,8 @@ export default function Home() {
     };
     getUsersYearlySchedules();
   }, [year, accessToken, userEmail]);
+
+  const [pendingLoading, setPendingLoading] = useState(false);
 
   useEffect(() => {
     const myPendingSchedule = async () => {
