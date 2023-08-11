@@ -111,7 +111,6 @@ export default function Home() {
 
         const sideMyScheduleData = listResponseData
           .filter((item: mySchedule) => item.userEmail === userEmail)
-          .filter((item: mySchedule) => item.state === 'APPROVE')
           .map((item: mySchedule) => {
             return {
               id: item.id,
