@@ -20,11 +20,12 @@ import { POSITIONS } from '@/data/constants';
 import formatPhoneNumber from '@/utils/formatPhonenumber';
 import { useEffect, useState } from 'react';
 import { getMyAccount } from '@/api/myAccount/getMyAccount';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { AccessTokenAtom } from '@/recoil/AccessTokkenAtom';
 import { changeMyInfo } from '@/api/myAccount/changeMyInfo';
 import PasswordChangeModal from '@/page/myAccount/passwordChangeModal';
 import { handleUpload } from '@/api/auth/cloudinary';
+import { ReRenderStateAtom } from '@/recoil/ReRenderStateAtom';
 
 interface MyAccountInfoType {
   phoneNumber: string;
@@ -52,6 +53,7 @@ export default function MyAccount() {
   const [editPhoneNumberInput, setEditPhonNumberInput] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editprofileThumbUrl, setEditProfileThumbUrl] = useState(false);
+  const setReRender = useSetRecoilState(ReRenderStateAtom);
 
   const accessToken = useRecoilValue(AccessTokenAtom);
 
@@ -124,12 +126,14 @@ export default function MyAccount() {
           ...prev,
           profileThumbUrl: imageUrl,
         }));
+        setReRender((prev) => !prev);
         // 성공
         messageApi.open({
           type: 'success',
           content: '프로필 이미지를 수정하였습니다.',
         });
       }
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       messageApi.open({
@@ -289,26 +293,28 @@ export default function MyAccount() {
                   paddingTop: '22px',
                 }}
               >
-                <Form.Item
-                  name="profileThumbUrl"
-                  valuePropName="fileList"
-                  getValueFromEvent={normFile}
-                >
-                  <Upload
-                    beforeUpload={() => false} /* showUploadList={false} */
+                <div style={{ display: 'flex' }}>
+                  <Form.Item
+                    name="profileThumbUrl"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
                   >
-                    <Button>
-                      <PlusOutlined /> Click to Upload
-                    </Button>
-                  </Upload>
-                </Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  style={{ margin: '0 0 24px 5px' }}
-                >
-                  수정
-                </Button>
+                    <Upload
+                      beforeUpload={() => false} /* showUploadList={false} */
+                    >
+                      <Button>
+                        <PlusOutlined /> Click to Upload
+                      </Button>
+                    </Upload>
+                  </Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ margin: '0 0 24px 5px' }}
+                  >
+                    수정
+                  </Button>
+                </div>
               </Form>
             </>
           ) : (

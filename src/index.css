@@ -48,3 +48,7 @@
     display: block;
   }
 }
+
+.ant-upload-wrapper .ant-upload-list {
+  width: 148px;
+}
