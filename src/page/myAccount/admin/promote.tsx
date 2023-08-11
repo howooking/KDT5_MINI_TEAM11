@@ -87,6 +87,7 @@ export default function Promote() {
       sorter: (a, b) =>
         Number(a.createAt.replaceAll('-', '')) -
         Number(b.createAt.replaceAll('-', '')),
+      render: (_, { createAt }) => <>{createAt.slice(0, 10)}</>,
     },
     {
       title: 'Action',

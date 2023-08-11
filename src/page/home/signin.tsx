@@ -100,7 +100,7 @@ export default function Signin({
         ref={formRef}
       >
         <Form.Item
-          label="이메일"
+          label="이메일 (관리자: jw@naver.com)"
           name="userEmail"
           rules={[
             { required: true, message: '이메일을 입력해주세요' },
@@ -117,7 +117,7 @@ export default function Signin({
           <Input size="large" />
         </Form.Item>
         <Form.Item
-          label="비밀번호"
+          label="비밀번호 (password1234!@)"
           name="userPassword"
           rules={[{ required: true, message: '비밀번호를 입력해주세요' }]}
         >
