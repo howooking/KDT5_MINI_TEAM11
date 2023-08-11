@@ -127,8 +127,8 @@ export default function Approve() {
       key: 'startDate',
       align: 'center',
       sorter: (a, b) =>
-        Number(a.startDate.replaceAll('-', '')) -
-        Number(b.startDate.replaceAll('-', '')),
+        Number(a.startDate.slice(0, 10).replaceAll('-', '')) -
+        Number(b.startDate.slice(0, 10).replaceAll('-', '')),
       render: (_, { startDate }) => <>{startDate.slice(0, 10)}</>,
     },
 
@@ -138,8 +138,8 @@ export default function Approve() {
       key: 'endDate',
       align: 'center',
       sorter: (a, b) =>
-        Number(a.endDate.replaceAll('-', '')) -
-        Number(b.endDate.replaceAll('-', '')),
+        Number(a.endDate.slice(0, 10).replaceAll('-', '')) -
+        Number(b.endDate.slice(0, 10).replaceAll('-', '')),
       render: (_, { endDate }) => <>{endDate.slice(0, 10)}</>,
     },
 

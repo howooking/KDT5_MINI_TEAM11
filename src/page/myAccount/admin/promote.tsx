@@ -85,8 +85,8 @@ export default function Promote() {
       dataIndex: 'createAt',
       align: 'center',
       sorter: (a, b) =>
-        Number(a.createAt.replaceAll('-', '')) -
-        Number(b.createAt.replaceAll('-', '')),
+        Number(a.createAt.slice(0, 10).replaceAll('-', '')) -
+        Number(b.createAt.slice(0, 10).replaceAll('-', '')),
       render: (_, { createAt }) => <>{createAt.slice(0, 10)}</>,
     },
     {
