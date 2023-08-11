@@ -55,7 +55,7 @@ export default function MySchedule({
         if (scheduleType === 'ANNUAL') {
           setReRender((prev) => !prev);
         }
-        setMyPendingScheduleList((prev) =>
+        setMyPendingScheduleList?.((prev) =>
           prev.filter((item) => item.key !== key),
         );
       }

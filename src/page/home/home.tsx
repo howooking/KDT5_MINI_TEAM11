@@ -178,7 +178,7 @@ export default function Home() {
       }
     };
     myPendingSchedule();
-  }, [year, reRender, accessToken]);
+  }, [year, accessToken, reRender]);
 
   const handleSelect = (value: string) => {
     setScheduleInput({
@@ -225,7 +225,25 @@ export default function Home() {
             ]?.label
           } 신청 완료`,
         });
-        setReRender((prev) => !prev);
+
+        if (response.data.response.scheduleType === 'ANNUAL') {
+          setReRender((prev) => !prev);
+        }
+
+        if (response.data.response.scheduleType === 'DUTY') {
+          const newPendingSchedule = {
+            id: response.data.response.id,
+            key: response.data.response.id,
+            scheduleType: response.data.response.scheduleType,
+            startDate: response.data.response.startDate,
+            endDate: response.data.response.endDate,
+            state: response.data.response.state,
+          };
+          setMyPendingScheduleList((prev) => {
+            console.log(prev);
+            return [...prev, newPendingSchedule];
+          });
+        }
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -245,6 +263,7 @@ export default function Home() {
   };
 
   const mySchedule = events.filter((event) => event.userEmail === userEmail);
+
   return (
     <>
       {contextHolder}
