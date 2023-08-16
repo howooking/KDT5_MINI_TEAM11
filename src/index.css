@@ -52,3 +52,15 @@
 .ant-upload-wrapper .ant-upload-list {
   width: 148px;
 }
+
+.ant-upload-wrapper.ant-upload-picture-card-wrapper
+  .ant-upload.ant-upload-select {
+  margin: 0;
+  width: 150px;
+  height: 150px;
+}
+
+.ant-layout * {
+  vertical-align: middle;
+  margin: 0;
+}
