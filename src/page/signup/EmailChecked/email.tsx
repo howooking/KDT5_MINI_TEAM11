@@ -23,6 +23,7 @@ export interface EmailProps extends SignupFormProps {
 }
 
 export interface EmailVerificationProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleVerificationEmail: () => Promise<AxiosResponse<any, any> | null>;
 }
 
@@ -88,6 +89,7 @@ export default function Email({ form, messageApi }: EmailProps) {
         clearTimeout(exactTimer);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer, verification]);
 
   // 이메일 인증을 다시 처음부터 하게 하는 재인증 기능

@@ -47,7 +47,7 @@ export default function Promote() {
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        console.log('사원데이터를 불러오지 못했습니다. : ', error);
+        console.error('사원데이터를 불러오지 못했습니다. : ', error);
       } finally {
         setIsWorkerListLoading(false);
       }

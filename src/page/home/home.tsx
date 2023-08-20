@@ -8,7 +8,7 @@ import {
   Space,
   message,
 } from 'antd';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
@@ -33,6 +33,7 @@ export interface ScheduleItem {
   startDate: string;
   endDate: string;
   state: string;
+  color: string;
 }
 
 interface mySchedule extends ScheduleItem {
@@ -40,20 +41,13 @@ interface mySchedule extends ScheduleItem {
 }
 
 export default function Home() {
-  // antd message(화면 상단에 뜨는 메세지)기능
-
   const [messageApi, contextHolder] = message.useMessage();
 
-  const [year, setYear] = useState(new Date().getFullYear());
-  // const {
-  //   token: { colorTextLabel },
-  // } = theme.useToken();
-
+  const [year, setYear] = useState(2024);
   const accessToken = useRecoilValue(AccessTokenAtom);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(!accessToken);
-  const setReRender = useSetRecoilState(ReRenderStateAtom);
-  const reRender = useRecoilValue(ReRenderStateAtom);
+  const [reRender, setReRender] = useRecoilState(ReRenderStateAtom);
   // 로그아웃을 하면 isModalOpen이 !accessToken의 상태를 바로 반영하지 않음
   // 따라서 useEffect로 반영이 되도록함
   useEffect(() => {
@@ -96,7 +90,7 @@ export default function Home() {
     }[]
   >([]);
 
-  const [userYearlySchedulesLoading, setUserYearlySchedulesLoading] =
+  const [usersYearlySchedulesLoading, setUsersYearlySchedulesLoading] =
     useState(false);
 
   useEffect(() => {
@@ -105,10 +99,9 @@ export default function Home() {
         return;
       }
       try {
-        setUserYearlySchedulesLoading(true);
+        setUsersYearlySchedulesLoading(true);
         const listResponse = await scheduleList(year);
         const listResponseData = listResponse.data.response;
-
         const sideMyScheduleData = listResponseData
           .filter((item: mySchedule) => item.userEmail === userEmail)
           .map((item: mySchedule) => {
@@ -122,7 +115,6 @@ export default function Home() {
             };
           });
         setSideMyschedule(sideMyScheduleData);
-
         const events = listResponseData
           .filter((item: mySchedule) => item.state === 'APPROVE')
           .map((item: ScheduleItem) => {
@@ -139,13 +131,13 @@ export default function Home() {
           });
         setEvents(events);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       } finally {
-        setUserYearlySchedulesLoading(false);
+        setUsersYearlySchedulesLoading(false);
       }
     };
     getUsersYearlySchedules();
-  }, [year, accessToken, userEmail]);
+  }, [year, accessToken, userEmail, setUsersYearlySchedulesLoading]);
 
   const [pendingLoading, setPendingLoading] = useState(false);
 
@@ -239,7 +231,6 @@ export default function Home() {
             state: response.data.response.state,
           };
           setMyPendingScheduleList((prev) => {
-            console.log(prev);
             return [...prev, newPendingSchedule];
           });
         }
@@ -293,7 +284,6 @@ export default function Home() {
             background: 'white',
             paddingTop: 20,
           }}
-          className="booh"
         >
           <div
             style={{
@@ -317,7 +307,7 @@ export default function Home() {
               <MySchedule
                 setMyPendingScheduleList={setMyPendingScheduleList}
                 schedule={sideMySchedule}
-                loading={userYearlySchedulesLoading}
+                loading={usersYearlySchedulesLoading}
                 caption="요청결과"
               />
             </div>
@@ -382,7 +372,7 @@ export default function Home() {
               events={events}
               year={year}
               setYear={setYear}
-              userYearlySchedulesLoading={userYearlySchedulesLoading}
+              usersYearlySchedulesLoading={usersYearlySchedulesLoading}
             />
           </Content>
         </Layout>

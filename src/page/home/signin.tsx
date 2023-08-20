@@ -7,7 +7,6 @@ import {
   message,
   FormInstance,
 } from 'antd';
-import { EMAIL_REGEX } from '@/data/constants';
 import { Link } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
@@ -99,28 +98,10 @@ export default function Signin({
         onFinish={handleSignin}
         ref={formRef}
       >
-        <Form.Item
-          label="이메일 (관리자: jw@naver.com)"
-          name="userEmail"
-          rules={[
-            { required: true, message: '이메일을 입력해주세요' },
-            {
-              validator: (_, value) => {
-                if (!value || EMAIL_REGEX.test(value)) {
-                  return Promise.resolve();
-                }
-                return Promise.reject('올바른 형식의 메일을 입력해주세요');
-              },
-            },
-          ]}
-        >
+        <Form.Item label="이메일 (관리자: jw@naver.com)" name="userEmail">
           <Input size="large" />
         </Form.Item>
-        <Form.Item
-          label="비밀번호 (password1234!@)"
-          name="userPassword"
-          rules={[{ required: true, message: '비밀번호를 입력해주세요' }]}
-        >
+        <Form.Item label="비밀번호 (password1234!@)" name="userPassword">
           <Input.Password size="large" />
         </Form.Item>
         <Button

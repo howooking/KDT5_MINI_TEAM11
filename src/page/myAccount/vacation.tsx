@@ -59,7 +59,7 @@ export default function Vaction() {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log('연가/당직 데이터를 불러오지 못했습니다. : ', error);
+      console.error('연가/당직 데이터를 불러오지 못했습니다. : ', error);
     } finally {
       setIsvacationRequestsLoading(false);
     }
@@ -84,7 +84,7 @@ export default function Vaction() {
         setReRender((prev) => !prev);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       messageApi.open({
         type: 'error',
         content: '요청 실패',

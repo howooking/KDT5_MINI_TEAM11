@@ -12,7 +12,6 @@ export const checkEmailAuth = async (data: {
   userEmail: string;
   userEmailAuth: string;
 }) => {
-  // 추후에 변경 /v1/auth/check-email-auth
   const response = await customAxios.post('/v1/auth/check-email-auth', data, {
     headers: { 'Content-Type': 'application/json' },
   });

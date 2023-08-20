@@ -40,15 +40,6 @@
   text-align: center;
 }
 
-.booh {
-  display: none;
-}
-@media screen and (min-width: 1000px) {
-  .booh {
-    display: block;
-  }
-}
-
 .ant-upload-wrapper .ant-upload-list {
   width: 148px;
 }

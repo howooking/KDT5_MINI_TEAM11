@@ -25,12 +25,11 @@ export default function UserInfo({
       <Avatar src={userHeaderInfo.profileThumbNail} />
       <Link to="/myaccount">{userHeaderInfo.userName}</Link>
       <Badge
-        className="booh"
         count={userHeaderInfo.position}
         // antd에서 지정된 색들이 있음 몇개 가져와서 constants 직책별로 넣어둠
         color={POSITIONS[userHeaderInfo?.position]?.color}
       />
-      <Text className="booh">
+      <Text>
         남은연차{' '}
         {POSITIONS[userHeaderInfo?.position]?.total_vacation -
           Number(userHeaderInfo.usedVacation)}

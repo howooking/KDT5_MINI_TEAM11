@@ -85,7 +85,7 @@ export default function MyAccount() {
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        console.log('내 계정 데이터 로딩 실패 :', error);
+        console.error('내 계정 데이터 로딩 실패 :', error);
       }
     };
     getData();
@@ -190,6 +190,7 @@ export default function MyAccount() {
 
   const props = {
     showUploadList: false,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     beforeUpload: (file: any) => {
       const isImage = file.type.startsWith('image/');
       if (!isImage) {

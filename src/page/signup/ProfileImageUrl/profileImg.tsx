@@ -15,6 +15,7 @@ export default function ProfileImg() {
 
   const props = {
     showUploadList: false,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     beforeUpload: (file: any) => {
       const isImage = file.type.startsWith('image/');
       if (!isImage) {

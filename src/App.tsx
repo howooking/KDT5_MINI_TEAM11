@@ -13,6 +13,7 @@ import Approve from '@/page/myAccount/admin/approve';
 import Promote from '@/page/myAccount/admin/promote';
 import NotFound from '@/page/notFound/notFountd';
 import Signup from '@/page/signup/signup';
+import LogoutRequireRoute from './components/LogoutRequireRoute';
 
 export default function App() {
   const theme = {
@@ -24,7 +25,9 @@ export default function App() {
   return (
     <ConfigProvider theme={theme} locale={koKR}>
       <Routes>
-        <Route path="/signup" element={<Signup />} />
+        <Route element={<LogoutRequireRoute />}>
+          <Route path="/signup" element={<Signup />} />
+        </Route>
         <Route element={<MyLayout />}>
           <Route path="/" element={<Home />} />
           <Route element={<ProtectedRoute />}>

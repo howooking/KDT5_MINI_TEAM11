@@ -56,7 +56,7 @@ export default function Approve() {
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        console.log('연가/당직 데이터를 불러오는 중 에러발생 : ', error);
+        console.error('연가/당직 데이터를 불러오는 중 에러발생 : ', error);
       } finally {
         setIsvacationRequestsLoading(false);
       }
@@ -85,7 +85,7 @@ export default function Approve() {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       messageApi.open({
         type: 'error',
         content:
